@@ -111,6 +111,8 @@ p4
 #test of color ramp
 #n <- nrow(airquality)
 #ramp <- colorRampPalette(c("green","blue","yellow"))(n)
+
+#Create a rbokeh plot
 p5 <- figure() %>%
   ly_points(Temp, Wind, data = airquality, color = Month, glyph = Month)
 p5
@@ -128,4 +130,11 @@ p6
 
 ## Discussion on my Graph
 
-"Be sure to write a brief essay that describes the plot you have created, what the plot shows, and what code you used to make this modification."
+"Be sure to write a brief essay that describes the plot you have created, what 
+the plot shows, and what code you used to make this modification."
+
+I created a simple graph that uses the rbokeh package. Through that package, 
+I made the color and point shapes to be based on month. After that completed,
+I created a more commonly used package, ggplot2, to re-create this same rbokeh
+plot. I had to make manual edits to the shapes and colors to match the 
+rbokeh plot as much as possible. 
