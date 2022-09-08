@@ -1,0 +1,131 @@
+---
+title: "Airquality Assignment"
+author: "Sulchan Yoon"
+date: "`r Sys.Date()`"
+format: html
+editor: visual
+---
+
+## Startup
+
+Tidyverse to process and handle most plots. rbokeh to process plot 5. Setting wd to where all class files are.
+
+```{r}
+library(tidyverse)
+library(rbokeh)
+setwd("~/Data Study/Data110 MC/Week 1")
+
+airquality <- airquality
+```
+
+\newpage
+
+## EDA - Exploratory Data Analysis
+
+The first few aspects are a copy of the sample description for this project. The later portion speaks on N/A handling. After confirmation, none of the p1-p4 plots use data within the N/A cols.
+
+```{r}
+# Summary and general statistics
+mean(airquality$Temp)
+mean(airquality[,4])
+median(airquality$Temp)
+sd(airquality$Wind)
+var(airquality$Wind)
+
+#summary of data structure
+str(airquality)
+head(airquality)
+
+# Relabel and re-review
+airquality$Month[airquality$Month == 5]<- "May"
+airquality$Month[airquality$Month == 6]<- "June"
+airquality$Month[airquality$Month == 7]<- "July"
+airquality$Month[airquality$Month == 8]<- "August"
+airquality$Month[airquality$Month == 9]<- "September"
+#review summary of data structure
+str(airquality)
+head(airquality)
+
+#re-review summary statistics
+summary(airquality)
+
+#order the months
+airquality$Month<-factor(airquality$Month, levels=c("May", "June","July", "August", "September"))
+```
+
+\newpage
+
+## Data Wrangling
+
+```{r}
+# check for N/A
+na.cols <- which(colSums(is.na(airquality)) >0)
+sort(colSums(sapply(airquality[na.cols], is.na)),decreasing = TRUE)
+
+paste('Number of columns with no values:', length(na.cols))
+
+which(is.na(airquality), arr.ind=TRUE)
+# What can we do with these N/A? Is it necessary for analysis?
+```
+
+\newpage
+
+## Graphics
+
+```{r}
+p1 <- qplot(data = airquality,Temp,color = Month,geom = "histogram", bins = 20)
+p1
+
+p2 <- airquality %>%
+  ggplot(aes(x=Temp, fill=Month)) +
+  geom_histogram(position="identity", alpha=0.5, binwidth = 5, color = "black")+
+  scale_fill_discrete(name = "Month", labels = c("May", "June","July", "August", "September"))
+p2
+
+p3 <- airquality %>%
+  ggplot(aes(Month, Temp, fill = Month)) + 
+  ggtitle("Temperatures") +
+  xlab("Monthly Temperatures") +
+  ylab("Frequency") +
+  geom_boxplot() +
+  scale_fill_discrete(name = "Month", labels = c("May", "June","July", "August", "September"))
+p3 
+
+p4 <- airquality %>%
+  ggplot(aes(Month, Temp, fill = Month)) + 
+  ggtitle("Monthly Temperature Variations") +
+  xlab("Monthly Temperatures") +
+  ylab("Frequency") +
+  geom_boxplot()+
+  scale_fill_grey(name = "Month", labels = c("May", "June","July", "August", "September"))
+p4
+```
+
+\newpage
+
+## Challenge Myself with Different Plots
+
+```{r}
+## Plot 5 - My own plot
+
+#test of color ramp
+#n <- nrow(airquality)
+#ramp <- colorRampPalette(c("green","blue","yellow"))(n)
+p5 <- figure() %>%
+  ly_points(Temp, Wind, data = airquality, color = Month, glyph = Month)
+p5
+
+#recreate the same rbokeh graph into a ggplot
+p6 <- airquality %>%
+  ggplot(aes(Temp, Wind, shape = Month, color = Month, alpha = 0.5)) +
+  geom_point(size = 4) + 
+  scale_shape_manual(values=c(16,15,17,18,10))+
+  scale_color_manual(values=c('blue','orange','green','red','purple'))
+p6
+```
+
+\newpage
+
+## Discussion on my Graph
+
+"Be sure to write a brief essay that describes the plot you have created, what the plot shows, and what code you used to make this modification."
